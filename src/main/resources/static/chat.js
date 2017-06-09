@@ -3,6 +3,7 @@ $(function() {
 
     var client;
 
+    var test;
     function showMessage(mesg)
     {
 	$('#messages').append('<tr>' +
@@ -37,10 +38,21 @@ $(function() {
 
     $('#connect').click(function() {
 	client = Stomp.over(new SockJS('/chat'));
-	client.connect({}, function (frame) {
+
+
+
+	client.connect({'simpUser1':'tester'}, function (frame) {
+
 	    setConnected(true);
 	    client.subscribe('/topic/messages', function (message) {
+	    alert(JSON.parse(message.body));
 		showMessage(JSON.parse(message.body));
+	    });
+
+	    client.subscribe("/user/queue/position-updates" , function (message) {
+	    alert("haha");	
+	    alert(JSON.parse(message.body));
+		//showMessage(JSON.parse(message.body));
 	    });
 	});
     });
