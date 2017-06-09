@@ -41,30 +41,30 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer
     
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-      //registration.setInterceptors(new MyChannelInterceptor());
-    	 registration.setInterceptors(new ChannelInterceptorAdapter() {
-
-    	        @Override
-    	        public Message<?> preSend(Message<?> message, MessageChannel channel) {
-
-    	            StompHeaderAccessor accessor =
-    	                MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-
-    	            if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-    	             //   Principal user = ... ; // access authentication header(s)
-    	                accessor.setUser(new Principal() {
-							
-							@Override
-							public String getName() {
-								// TODO Auto-generated method stub
-								return "tester";
-							}
-						});
-    	            }
-
-    	            return message;
-    	        }
-    	    });
+      registration.setInterceptors(new MyChannelInterceptor());
+//    	 registration.setInterceptors(new ChannelInterceptorAdapter() {
+//
+//    	        @Override
+//    	        public Message<?> preSend(Message<?> message, MessageChannel channel) {
+//
+//    	            StompHeaderAccessor accessor =
+//    	                MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+//
+//    	            if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+//    	             //   Principal user = ... ; // access authentication header(s)
+//    	                accessor.setUser(new Principal() {
+//							
+//							@Override
+//							public String getName() {
+//								// TODO Auto-generated method stub
+//								return "tester";
+//							}
+//						});
+//    	            }
+//
+//    	            return message;
+//    	        }
+//    	    });
       
     }
     

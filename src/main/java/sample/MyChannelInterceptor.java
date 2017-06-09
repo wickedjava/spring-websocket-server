@@ -1,43 +1,43 @@
 package sample;
 
+import java.security.Principal;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptorAdapter;
-
-import java.security.Principal;
-import java.util.List;
-
-import org.springframework.core.annotation.Order;
-import org.springframework.messaging.Message;
-import org.springframework.core.Ordered;
+import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.stereotype.Service;
 
 
-@Order(Ordered.HIGHEST_PRECEDENCE + 99)
+@Configuration
+@Service
 public class MyChannelInterceptor extends ChannelInterceptorAdapter {
 
 	  @Override
 	  public Message<?> preSend(Message<?> message, MessageChannel channel) {
-	    StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-	    StompCommand stompCommand = accessor.getCommand();
-	    System.out.println("preSend StompCommand="+stompCommand.name());
-	    System.out.println("preSend Destination="+accessor.getDestination());
-	    
-	    if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-         //   Principal user = ... ; // access authentication header(s)
-            accessor.setUser(new Principal() {
-    			
-    			@Override
-    			public String getName() {
-    				
-    				return "tester";
-    			}
-    		});
-        }
+          StompHeaderAccessor accessor =
+          MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
-        return message;
+      if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+       //   Principal user = ... ; // access authentication header(s)
+          accessor.setUser(new Principal() {
+				
+				@Override
+				public String getName() {
+					// TODO Auto-generated method stub
+					return "tester";
+				}
+			});
+      }
+
+      return message;
         
 	  }
 	  
